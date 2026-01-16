@@ -13,38 +13,16 @@ body{
   font-family:monospace;
   text-align:center;
 }
+
+/* HEADER */
 header{margin-top:40px;}
-h1{font-size:2.5rem;text-shadow:0 0 10px #00ff66;}
 .version{font-size:0.7rem;opacity:0.7;}
 #bienvenida{
-  margin-top:20px;
-  font-size:1rem;
+  margin-top:15px;
+  font-size:0.95rem;
   opacity:0;
-  text-shadow:0 0 6px #00ff66;
+  text-shadow:0 0 8px #00ff66;
 }
-.container{
-  margin:60px auto;
-  max-width:800px;
-  display:grid;
-  grid-template-columns:1fr;
-  gap:30px;
-}
-.card{
-  border:3px solid #00ff66;
-  padding:40px;
-  box-shadow:0 0 20px #00ff66;
-}
-a{color:#00ff66;text-decoration:none;}
-button{
-  background:#000;
-  color:#00ff66;
-  border:2px solid #00ff66;
-  padding:12px 25px;
-  cursor:pointer;
-  font-family:monospace;
-  box-shadow:0 0 10px #00ff66;
-}
-button:hover{background:#00ff66;color:#000}
 
 /* START */
 #startScreen{
@@ -72,6 +50,58 @@ button:hover{background:#00ff66;color:#000}
   padding:40px 60px;
   box-shadow:0 0 25px #00ff66;
 }
+
+/* TERMINAL */
+.terminal{
+  max-width:800px;
+  margin:40px auto;
+  border:3px solid #00ff66;
+  padding:30px;
+  box-shadow:0 0 25px #00ff66;
+  text-align:left;
+  font-size:0.9rem;
+}
+.line{margin:8px 0;}
+.cursor::after{
+  content:"_";
+  animation:blink 1s infinite;
+}
+@keyframes blink{
+  0%,50%{opacity:1;}
+  51%,100%{opacity:0;}
+}
+
+/* SECTIONS */
+.container{
+  margin:60px auto;
+  max-width:800px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:30px;
+}
+.card{
+  border:3px solid #00ff66;
+  padding:40px;
+  box-shadow:0 0 20px #00ff66;
+  cursor:pointer;
+}
+.card:hover{
+  background:#00ff66;
+  color:#000;
+}
+
+a{color:#00ff66;text-decoration:none;}
+
+button{
+  background:#000;
+  color:#00ff66;
+  border:2px solid #00ff66;
+  padding:12px 25px;
+  cursor:pointer;
+  font-family:monospace;
+  box-shadow:0 0 12px #00ff66;
+}
+button:hover{background:#00ff66;color:#000}
 </style>
 </head>
 
@@ -91,32 +121,43 @@ button:hover{background:#00ff66;color:#000}
 </div>
 
 <header>
-  <h1>EMUSTATION</h1>
+  <!-- TITULO IMAGEN MISMO TAMAÑO QUE EL H1 ANTERIOR -->
+  <img src="emustation-titulo.png"
+       alt="EMUSTATION OS"
+       style="width:300px;max-width:90%;filter:drop-shadow(0 0 10px #00ff66);">
+
   <p id="bienvenida"></p>
   <p class="version">EMUSTATION OS v1.0</p>
 </header>
 
+<!-- TERMINAL -->
+<div class="terminal">
+  <div class="line">> Sistema operativo cargado</div>
+  <div class="line">> Seguridad: ACTIVA</div>
+  <div class="line">> Modo retro: ENABLED</div>
+  <div class="line cursor">> Esperando comandos</div>
+</div>
+
+<!-- SECCIONES -->
 <div class="container">
 
   <div class="card" onclick="clickBeep()">
-    🎮 JUEGOS<br><br>
-    Próximamente...
+    > JUEGOS<br>Próximamente...
   </div>
 
   <div class="card">
-    🕹️ EMULADORES<br><br>
+    > EMULADORES<br><br>
     <a onclick="clickBeep()" href="https://www.mediafire.com/file/d7qbq4npmefeisi/android-latest.apk/file" target="_blank">
       Descargar emulador PSVita
     </a>
   </div>
 
   <div class="card" onclick="errorBeep()">
-    ⬇️ DESCARGAS<br><br>
-    Próximamente...
+    > DESCARGAS<br>Próximamente...
   </div>
 
   <div class="card">
-    📝 NOTA<br><br>
+    > NOTA<br><br>
 
     <span id="notaCorta">
       Esta página está dedicada al mundo gaming...
@@ -142,66 +183,55 @@ button:hover{background:#00ff66;color:#000}
 <audio id="error" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
 
 <script>
-const boot = document.getElementById('boot');
-const beep = document.getElementById('beep');
-const error = document.getElementById('error');
+const boot=document.getElementById('boot');
+const beep=document.getElementById('beep');
+const error=document.getElementById('error');
 
 function iniciarEmustation(){
   document.getElementById('startScreen').style.display='none';
   document.getElementById('loader').style.display='flex';
 
-  boot.volume = 0.4;
+  boot.volume=0.4;
   boot.play();
 
-  let dots = 0;
-  const loadingText = document.getElementById('loadingText');
-  const interval = setInterval(()=>{
-    dots = (dots + 1) % 12;
-    loadingText.textContent = 'Iniciando el sistema' + '.'.repeat(dots);
+  let dots=0;
+  const loadingText=document.getElementById('loadingText');
+  const interval=setInterval(()=>{
+    dots=(dots+1)%12;
+    loadingText.textContent='Iniciando el sistema'+'.'.repeat(dots);
   },500);
 
   setTimeout(()=>{
     clearInterval(interval);
     document.getElementById('loader').style.display='none';
 
-    let usuario = localStorage.getItem('usuarioRetro');
+    let usuario=localStorage.getItem('usuarioRetro');
     if(!usuario){
-      usuario = prompt('Ingresa tu nombre de usuario') || 'Usuario';
-      localStorage.setItem('usuarioRetro', usuario);
+      usuario=prompt('Ingresa tu nombre de usuario')||'Usuario';
+      localStorage.setItem('usuarioRetro',usuario);
     }
 
-    const bienvenida = document.getElementById('bienvenida');
-    bienvenida.textContent = usuario + ' se ha unido al servidor';
-    bienvenida.style.opacity = '1';
+    const bienvenida=document.getElementById('bienvenida');
+    bienvenida.textContent=usuario+' se ha unido al servidor';
+    bienvenida.style.opacity='1';
 
-    beep.volume = 0.4;
+    beep.volume=0.4;
     beep.play();
   },9000);
 }
 
-function clickBeep(){
-  beep.currentTime = 0;
-  beep.play();
-}
-
-function errorBeep(){
-  error.currentTime = 0;
-  error.play();
-}
+function clickBeep(){beep.currentTime=0;beep.play();}
+function errorBeep(){error.currentTime=0;error.play();}
 
 function toggleNota(){
-  const corta = document.getElementById('notaCorta');
-  const completa = document.getElementById('notaCompleta');
-  const btn = event.target;
-
-  if(completa.style.display === 'none'){
-    completa.style.display = 'inline';
-    corta.style.display = 'none';
-    btn.textContent = 'Mostrar menos';
-  } else {
-    completa.style.display = 'none';
-    corta.style.display = 'inline';
-    btn.textContent = 'Mostrar más';
+  const corta=document.getElementById('notaCorta');
+  const completa=document.getElementById('notaCompleta');
+  if(completa.style.display==='none'){
+    completa.style.display='inline';
+    corta.style.display='none';
+  }else{
+    completa.style.display='none';
+    corta.style.display='inline';
   }
 }
 </script>
