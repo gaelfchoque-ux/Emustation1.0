@@ -1,142 +1,162 @@
-<!DOCTYPE html><html lang="es">
+<!DOCTYPE html>
+<html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>EMUSTATION OS</title>
+  <title>EMUSTATION</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body{
-      margin:0;
-      background:#000;
-      color:#00ff66;
-      font-family:monospace;
-      text-align:center;
+    body {
+      margin: 0;
+      background: #000;
+      color: #00ffcc;
+      font-family: monospace;
+      text-align: center;
     }
-    header{
-      margin-top:40px;
-    }
-    h1{
-      font-size:2.5rem;
-      text-shadow:0 0 10px #00ff66;
-    }
-    .version{
-      font-size:0.7rem;
-      opacity:0.7;
-    }
-    #bienvenida{
-      margin-top:20px;
-      font-size:0.9rem;
-      opacity:0;
-      text-shadow:0 0 6px #00ff66;
-    }
-    .container{
-      margin:60px auto;
-      max-width:800px;
-      display:grid;
-      grid-template-columns:1fr;
-      gap:30px;
-    }
-    .card{
-      border:3px solid #00ff66;
-      padding:40px;
-      box-shadow:0 0 20px #00ff66;
-    }
-    a{
-      color:#00ff66;
-      text-decoration:none;
-    }
-    button{
-      background:#000;
-      color:#00ff66;
-      border:2px solid #00ff66;
-      padding:10px 20px;
-      cursor:pointer;
-      font-family:monospace;
-    }/* LOADER */
-#loader{
-  position:fixed;
-  inset:0;
-  background:#000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-}
-.loader-box{
-  border:3px solid #00ff66;
-  padding:40px 60px;
-  box-shadow:0 0 25px #00ff66;
-}
 
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: black;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .dots::after {
+      content: "";
+      animation: dots 1s infinite steps(4);
+    }
+
+    @keyframes dots {
+      0% {content:"";}
+      25% {content:".";}
+      50% {content:"..";}
+      75% {content:"...";}
+      100% {content:"....";}
+    }
+
+    h1 {
+      margin-top: 40px;
+      font-size: 3em;
+    }
+
+    .card {
+      border: 2px solid #00ffcc;
+      margin: 20px auto;
+      padding: 20px;
+      width: 90%;
+      max-width: 500px;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    a {
+      color: #00ffcc;
+      text-decoration: none;
+    }
+
+    button {
+      background: none;
+      border: none;
+      color: #00ffcc;
+      font-family: monospace;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    .version {
+      margin: 40px 0;
+      opacity: 0.7;
+    }
   </style>
 </head>
-<body><div id="loader">
-  <div class="loader-box">
-    <h2>EMUSTATION OS</h2>
-    <p id="loadingText">Iniciando el sistema</p>
-  </div>
-</div><header>
-  <h1>EMUSTATION</h1>
-  <p id="bienvenida"></p>
-  <p class="version">EMUSTATION OS v1.0</p>
-</header><div class="container">
-  <div class="card">🎮 JUEGOS<br>Próximamente...</div>  <div class="card">🕹️ EMULADORES<br><br>
-    <a href="https://www.mediafire.com/file/d7qbq4npmefeisi/android-latest.apk/file" target="_blank">Descargar emuladorPsvita</a>
-  </div>  <div class="card">⬇️ DESCARGAS<br>Próximamente...</div>  <div class="card">📝 NOTA<br><br>
-    <span id="notaCorta">Esta página está dedicada al mundo gaming...</span>
-    <span id="notaCompleta" style="display:none;">
-      Esta página está para subir todo del mundo gaming que ya existe, ya que es obvio que no es de mi autoría, pero la función que cumple es reunir emuladores y juegos sin virus en una sola página: juegos de PS1, PS2, PS3 y PSVita.
-    </span><br><br>
-    <button onclick="toggleNota()">Mostrar más</button>
-  </div>
-</div><audio id="boot" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" preload="auto"></audio> <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+
+<body>
+
+<!-- PANTALLA DE CARGA -->
+<div id="loader">
+  <p>Iniciando el sistema<span class="dots"></span></p>
+</div>
+
+<!-- SONIDOS -->
+<audio id="bootSound" src="https://www.soundjay.com/buttons/sounds/button-29.mp3"></audio>
 
 <script>
-function toggleNota(){
-  const corta = document.getElementById('notaCorta');
-  const completa = document.getElementById('notaCompleta');
-  const btn = event.target;
-
-  if(completa.style.display === 'none'){
-    completa.style.display = 'inline';
-    corta.style.display = 'none';
-    btn.textContent = 'Mostrar menos';
-  } else {
-    completa.style.display = 'none';
-    corta.style.display = 'inline';
-    btn.textContent = 'Mostrar más';
-  }
-}
-
-window.addEventListener('load', () => {
-  const loader = document.getElementById('loader');
-  const loadingText = document.getElementById('loadingText');
-  const boot = document.getElementById('boot');
-  const beep = document.getElementById('beep');
-
-  if(boot){ boot.volume = 0.4; boot.play().catch(()=>{}); }
-
-  let dots = 0;
-  const interval = setInterval(() => {
-    dots = (dots + 1) % 12;
-    loadingText.textContent = 'Iniciando el sistema' + '.'.repeat(dots);
-  }, 500);
-
+  // quitar loader después de 10s
   setTimeout(() => {
-    clearInterval(interval);
-    loader.style.display = 'none';
-
-    let usuario = localStorage.getItem('usuarioRetro');
-    if(!usuario){
-      usuario = prompt('Ingresa tu nombre de usuario') || 'Usuario';
-      localStorage.setItem('usuarioRetro', usuario);
-    }
-
-    const bienvenida = document.getElementById('bienvenida');
-    bienvenida.textContent = usuario + ' se ha unido al servidor';
-    bienvenida.style.opacity = '1';
-
-    if(beep){ beep.volume = 0.4; beep.play().catch(()=>{}); }
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("bootSound").play();
   }, 10000);
-});
-</script></body>
+
+  // sonido usuario conectado
+  setTimeout(() => {
+    new Audio("https://www.soundjay.com/buttons/sounds/beep-07.mp3").play();
+  }, 12000);
+
+  function beepClick() {
+    new Audio("https://www.soundjay.com/buttons/sounds/button-16.mp3").play();
+  }
+
+  function disabledSound() {
+    new Audio("https://www.soundjay.com/buttons/sounds/beep-10.mp3").play();
+    alert("Función próximamente...");
+  }
+
+  function toggle(id) {
+    beepClick();
+    document.getElementById(id).classList.toggle("hidden");
+  }
+</script>
+
+<!-- CONTENIDO -->
+<h1>EMUSTATION</h1>
+
+<p style="font-size:1.2em;">usuario se ha unido al servidor</p>
+
+<div class="card" onclick="toggle('juegos')">
+  JUEGOS
+</div>
+<div id="juegos" class="hidden">
+  <p>Próximamente...</p>
+</div>
+
+<div class="card" onclick="toggle('emus')">
+  EMULADORES
+</div>
+<div id="emus" class="hidden">
+  <p>
+    <a href="https://www.mediafire.com/file/d7qbq4npmefeisi/android-latest.apk/file" target="_blank" onclick="beepClick()">
+      EmuladorPsvita
+    </a>
+  </p>
+</div>
+
+<div class="card" onclick="toggle('descargas')">
+  DESCARGAS
+</div>
+<div id="descargas" class="hidden">
+  <p>Próximamente...</p>
+</div>
+
+<div class="card" onclick="toggle('nota')">
+  NOTA
+</div>
+<div id="nota" class="hidden">
+  <p>
+    Esta página está hecha para reunir emuladores y juegos ya existentes,
+    sin virus, en un solo lugar. Juegos de PS1, PS2, PS3 y PSVITA.
+    No es de mi autoría, pero sí es una recopilación segura para la comunidad gaming.
+  </p>
+</div>
+
+<div class="version">
+  EMUSTATION 1.0
+</div>
+
+</body>
 </html>
