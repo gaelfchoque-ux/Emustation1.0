@@ -1,62 +1,63 @@
-<!DOCTYPE html><html lang="es">
+<!DOCTYPE html>
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>EMUSTATION OS</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body{
-      margin:0;
-      background:#000;
-      color:#00ff66;
-      font-family:monospace;
-      text-align:center;
-    }
-    header{
-      margin-top:40px;
-    }
-    h1{
-      font-size:2.5rem;
-      text-shadow:0 0 10px #00ff66;
-    }
-    .version{
-      font-size:0.7rem;
-      opacity:0.7;
-    }
-    #bienvenida{
-      margin-top:20px;
-      font-size:0.9rem;
-      opacity:0;
-      text-shadow:0 0 6px #00ff66;
-    }
-    .container{
-      margin:60px auto;
-      max-width:800px;
-      display:grid;
-      grid-template-columns:1fr;
-      gap:30px;
-    }
-    .card{
-      border:3px solid #00ff66;
-      padding:40px;
-      box-shadow:0 0 20px #00ff66;
-    }
-    a{
-      color:#00ff66;
-      text-decoration:none;
-    }
-    button{
-      background:#000;
-      color:#00ff66;
-      border:2px solid #00ff66;
-      padding:10px 20px;
-      cursor:pointer;
-      font-family:monospace;
-    }/* LOADER */
-#loader{
+<meta charset="UTF-8">
+<title>EMUSTATION OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  background:#000;
+  color:#00ff66;
+  font-family:monospace;
+  text-align:center;
+}
+header{margin-top:40px;}
+h1{font-size:2.5rem;text-shadow:0 0 10px #00ff66;}
+.version{font-size:0.7rem;opacity:0.7;}
+#bienvenida{margin-top:20px;font-size:0.9rem;opacity:0;text-shadow:0 0 6px #00ff66;}
+.container{
+  margin:60px auto;
+  max-width:800px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:30px;
+}
+.card{
+  border:3px solid #00ff66;
+  padding:40px;
+  box-shadow:0 0 20px #00ff66;
+}
+a{color:#00ff66;text-decoration:none;}
+button{
+  background:#000;
+  color:#00ff66;
+  border:2px solid #00ff66;
+  padding:12px 25px;
+  cursor:pointer;
+  font-family:monospace;
+  box-shadow:0 0 10px #00ff66;
+}
+button:hover{background:#00ff66;color:#000}
+
+/* START */
+#startScreen{
   position:fixed;
   inset:0;
   background:#000;
   display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:10000;
+}
+
+/* LOADER */
+#loader{
+  position:fixed;
+  inset:0;
+  background:#000;
+  display:none;
   align-items:center;
   justify-content:center;
   z-index:9999;
@@ -66,77 +67,110 @@
   padding:40px 60px;
   box-shadow:0 0 25px #00ff66;
 }
-
-  </style>
+</style>
 </head>
-<body><div id="loader">
+
+<body>
+
+<!-- START -->
+<div id="startScreen">
+  <button onclick="iniciarEmustation()">▶ INICIAR EMUSTATION</button>
+</div>
+
+<!-- LOADER -->
+<div id="loader">
   <div class="loader-box">
     <h2>EMUSTATION OS</h2>
     <p id="loadingText">Iniciando el sistema</p>
   </div>
-</div><header>
+</div>
+
+<header>
   <h1>EMUSTATION</h1>
   <p id="bienvenida"></p>
   <p class="version">EMUSTATION OS v1.0</p>
-</header><div class="container">
-  <div class="card">🎮 JUEGOS<br>Próximamente...</div>  <div class="card">🕹️ EMULADORES<br><br>
-    <a href="https://www.mediafire.com/file/d7qbq4npmefeisi/android-latest.apk/file" target="_blank">Descargar emuladorPsvita</a>
-  </div>  <div class="card">⬇️ DESCARGAS<br>Próximamente...</div>  <div class="card">📝 NOTA<br><br>
+</header>
+
+<div class="container">
+  <div class="card" onclick="clickBeep()">🎮 JUEGOS<br>Próximamente...</div>
+
+  <div class="card">
+    🕹️ EMULADORES<br><br>
+    <a onclick="clickBeep()" href="https://www.mediafire.com/file/d7qbq4npmefeisi/android-latest.apk/file" target="_blank">
+      Descargar emulador PSVita
+    </a>
+  </div>
+
+  <div class="card" onclick="errorBeep()">⬇️ DESCARGAS<br>Próximamente...</div>
+
+  <div class="card">
+    📝 NOTA<br><br>
     <span id="notaCorta">Esta página está dedicada al mundo gaming...</span>
     <span id="notaCompleta" style="display:none;">
-      Esta página está para subir todo del mundo gaming que ya existe, ya que es obvio que no es de mi autoría, pero la función que cumple es reunir emuladores y juegos sin virus en una sola página: juegos de PS1, PS2, PS3 y PSVita.
+      Esta página está para reunir emuladores y juegos sin virus en una sola página.
     </span><br><br>
-    <button onclick="toggleNota()">Mostrar más</button>
+    <button onclick="toggleNota(); clickBeep()">Mostrar más</button>
   </div>
-</div><audio id="boot" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" preload="auto"></audio> <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+</div>
+
+<!-- SONIDOS -->
+<audio id="boot" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"></audio>
+<audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+<audio id="error" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
 
 <script>
-function toggleNota(){
-  const corta = document.getElementById('notaCorta');
-  const completa = document.getElementById('notaCompleta');
-  const btn = event.target;
+const boot = document.getElementById('boot');
+const beep = document.getElementById('beep');
+const error = document.getElementById('error');
 
-  if(completa.style.display === 'none'){
-    completa.style.display = 'inline';
-    corta.style.display = 'none';
-    btn.textContent = 'Mostrar menos';
-  } else {
-    completa.style.display = 'none';
-    corta.style.display = 'inline';
-    btn.textContent = 'Mostrar más';
-  }
-}
+function iniciarEmustation(){
+  document.getElementById('startScreen').style.display='none';
+  document.getElementById('loader').style.display='flex';
 
-window.addEventListener('load', () => {
-  const loader = document.getElementById('loader');
-  const loadingText = document.getElementById('loadingText');
-  const boot = document.getElementById('boot');
-  const beep = document.getElementById('beep');
+  boot.volume=0.4;
+  boot.play();
 
-  if(boot){ boot.volume = 0.4; boot.play().catch(()=>{}); }
+  let dots=0;
+  const loadingText=document.getElementById('loadingText');
+  const interval=setInterval(()=>{
+    dots=(dots+1)%12;
+    loadingText.textContent='Iniciando el sistema'+'.'.repeat(dots);
+  },500);
 
-  let dots = 0;
-  const interval = setInterval(() => {
-    dots = (dots + 1) % 12;
-    loadingText.textContent = 'Iniciando el sistema' + '.'.repeat(dots);
-  }, 500);
-
-  setTimeout(() => {
+  setTimeout(()=>{
     clearInterval(interval);
-    loader.style.display = 'none';
+    document.getElementById('loader').style.display='none';
 
-    let usuario = localStorage.getItem('usuarioRetro');
+    let usuario=localStorage.getItem('usuarioRetro');
     if(!usuario){
-      usuario = prompt('Ingresa tu nombre de usuario') || 'Usuario';
-      localStorage.setItem('usuarioRetro', usuario);
+      usuario=prompt('Ingresa tu nombre de usuario')||'Usuario';
+      localStorage.setItem('usuarioRetro',usuario);
     }
 
-    const bienvenida = document.getElementById('bienvenida');
-    bienvenida.textContent = usuario + ' se ha unido al servidor';
-    bienvenida.style.opacity = '1';
+    const bienvenida=document.getElementById('bienvenida');
+    bienvenida.textContent=usuario+' se ha unido al servidor';
+    bienvenida.style.opacity='1';
 
-    if(beep){ beep.volume = 0.4; beep.play().catch(()=>{}); }
-  }, 10000);
-});
-</script></body>
+    beep.volume=0.4;
+    beep.play();
+  },9000);
+}
+
+function clickBeep(){beep.currentTime=0;beep.play();}
+function errorBeep(){error.currentTime=0;error.play();}
+
+function toggleNota(){
+  const corta=document.getElementById('notaCorta');
+  const completa=document.getElementById('notaCompleta');
+  if(completa.style.display==='none'){
+    completa.style.display='inline';
+    corta.style.display='none';
+  }else{
+    completa.style.display='none';
+    corta.style.display='inline';
+  }
+}
+</script>
+
+</body>
 </html>
