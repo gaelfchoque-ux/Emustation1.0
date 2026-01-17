@@ -57,10 +57,11 @@ button{
   background:#000;
   color:#00ff66;
   border:2px solid #00ff66;
-  padding:12px 25px;
+  padding:14px 30px;
   cursor:pointer;
   font-family:monospace;
-  box-shadow:0 0 10px #00ff66;
+  box-shadow:0 0 15px #00ff66;
+  font-size:1rem;
 }
 
 button:hover{
@@ -102,7 +103,7 @@ button:hover{
 
 <!-- START -->
 <div id="startScreen">
-  <button onclick="iniciarEmustation()">▶ INICIAR EMUSTATION</button>
+  <button id="startBtn">▶ INICIAR EMUSTATION</button>
 </div>
 
 <!-- LOADER -->
@@ -121,13 +122,10 @@ button:hover{
 
 <div class="container">
 
-  <div class="card">
-    🎮 JUEGOS  
-    <div>Próximamente...</div>
-  </div>
+  <div class="card">🎮 JUEGOS<div>Próximamente...</div></div>
 
   <div class="card">
-    🕹️ EMULADORES  
+    🕹️ EMULADORES
     <div style="margin-top:10px;">
       <a href="https://www.mediafire.com/file/d7qbq4npmefeisi/android-latest.apk/file" target="_blank">
         Descargar emulador PSVita
@@ -135,25 +133,15 @@ button:hover{
     </div>
   </div>
 
-  <div class="card">
-    ⬇️ DESCARGAS  
-    <div>Próximamente...</div>
-  </div>
+  <div class="card">⬇️ DESCARGAS<div>Próximamente...</div></div>
 
   <div class="card">
     📝 NOTA
-    <div id="notaCorta" style="margin-top:10px;">
-      Esta página está dedicada al mundo gaming...
+    <div id="notaCorta">Esta página está dedicada al mundo gaming...</div>
+    <div id="notaCompleta" style="display:none;">
+      Esta página reúne emuladores y juegos sin virus de PS1, PS2, PS3 y PSVita
+      para facilitar el acceso y cuidar la seguridad de los usuarios.
     </div>
-
-    <div id="notaCompleta" style="display:none; margin-top:10px;">
-      Esta página está para subir todo del mundo gaming que ya existe, ya que es obvio
-      que no es de mi autoría, pero la función que cumple es reunir en una sola página
-      emuladores y juegos sin virus. Aquí se podrán encontrar juegos y emuladores de
-      PS1, PS2, PS3 y PSVita, facilitando el acceso y cuidando la seguridad de los
-      usuarios que solo quieren jugar sin preocupaciones.
-    </div>
-
     <div style="margin-top:15px;">
       <button onclick="toggleNota()">Mostrar más</button>
     </div>
@@ -162,21 +150,23 @@ button:hover{
 </div>
 
 <!-- SONIDOS -->
-<audio id="boot" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
-<audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+<audio id="boot" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"></audio>
+<audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
 
 <script>
 const boot = document.getElementById("boot");
 const beep = document.getElementById("beep");
+const startBtn = document.getElementById("startBtn");
 
-/* INICIO */
-function iniciarEmustation(){
-  document.getElementById("startScreen").style.display="none";
-  document.getElementById("loader").style.display="flex";
+startBtn.addEventListener("click", () => {
 
+  // sonido PERMITIDO porque es click real
   boot.volume = 0.9;
   boot.currentTime = 0;
-  boot.play().catch(()=>{});
+  boot.play();
+
+  document.getElementById("startScreen").style.display = "none";
+  document.getElementById("loader").style.display = "flex";
 
   let dots = 0;
   const loadingText = document.getElementById("loadingText");
@@ -188,7 +178,7 @@ function iniciarEmustation(){
 
   setTimeout(()=>{
     clearInterval(interval);
-    document.getElementById("loader").style.display="none";
+    document.getElementById("loader").style.display = "none";
 
     let usuario = localStorage.getItem("usuarioRetro");
     if(!usuario){
@@ -197,4 +187,41 @@ function iniciarEmustation(){
     }
 
     const bienvenida = document.getElementById("bienvenida");
-    bienvenida.textContent
+    bienvenida.textContent = usuario + " se ha unido al sistema";
+    bienvenida.style.opacity = "1";
+
+    beep.volume = 0.8;
+    beep.currentTime = 0;
+    beep.play();
+  },9000);
+});
+
+function toggleNota(){
+  const corta = document.getElementById("notaCorta");
+  const completa = document.getElementById("notaCompleta");
+  const btn = event.target;
+
+  if(completa.style.display === "none"){
+    completa.style.display = "block";
+    corta.style.display = "none";
+    btn.textContent = "Mostrar menos";
+  }else{
+    completa.style.display = "none";
+    corta.style.display = "block";
+    btn.textContent = "Mostrar más";
+  }
+
+  beep.currentTime = 0;
+  beep.play();
+}
+
+document.addEventListener("click", e=>{
+  if(e.target.classList.contains("card") || e.target.tagName==="A"){
+    beep.currentTime = 0;
+    beep.play();
+  }
+});
+</script>
+
+</body>
+</html>
