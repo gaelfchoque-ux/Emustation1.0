@@ -16,7 +16,12 @@ body{
 header{margin-top:40px;}
 h1{font-size:2.5rem;text-shadow:0 0 10px #00ff66;}
 .version{font-size:0.7rem;opacity:0.7;}
-#bienvenida{margin-top:20px;font-size:0.9rem;opacity:0;text-shadow:0 0 6px #00ff66;}
+#bienvenida{
+  margin-top:20px;
+  font-size:1rem;
+  opacity:0;
+  text-shadow:0 0 6px #00ff66;
+}
 
 .container{
   margin:60px auto;
@@ -95,14 +100,17 @@ button:hover{background:#00ff66;color:#000}
 
 <div class="container">
 
-  <div class="card typewriter"
-       data-text="🎮 JUEGOS<br>Próximamente...">
+  <!-- JUEGOS -->
+  <div class="card">
+    <div class="typewriter" data-text="🎮 JUEGOS"></div>
+    <br>
+    <div class="typewriter" data-text="Próximamente..."></div>
   </div>
 
+  <!-- EMULADORES -->
   <div class="card">
-    <span class="typewriter"
-          data-text="🕹️ EMULADORES<br><br>">
-    </span>
+    <div class="typewriter" data-text="🕹️ EMULADORES"></div>
+    <br><br>
     <a onclick="clickBeep()"
        href="https://www.mediafire.com/file/d7qbq4npmefeisi/android-latest.apk/file"
        target="_blank">
@@ -110,38 +118,34 @@ button:hover{background:#00ff66;color:#000}
     </a>
   </div>
 
-  <div class="card typewriter"
-       data-text="⬇️ DESCARGAS<br>Próximamente...">
+  <!-- DESCARGAS -->
+  <div class="card">
+    <div class="typewriter" data-text="⬇️ DESCARGAS"></div>
+    <br>
+    <div class="typewriter" data-text="Próximamente..."></div>
   </div>
 
+  <!-- NOTA -->
   <div class="card">
-    📝 NOTA<br><br>
-
-    <span id="notaCorta"
-          class="typewriter"
-          data-text="Esta página está dedicada al mundo gaming...">
-    </span>
-
-    <span id="notaCompleta"
-          style="display:none;"
-          data-text="Esta página está para subir todo del mundo gaming que ya existe, ya que es obvio que no es de mi autoría, pero la función que cumple es reunir en una sola página emuladores y juegos sin virus. Aquí se podrán encontrar juegos y emuladores de PS1, PS2, PS3 y PSVita, facilitando el acceso y cuidando la seguridad de los usuarios que solo quieren jugar sin preocupaciones.">
-    </span>
-
+    <div class="typewriter" data-text="📝 NOTA"></div>
     <br><br>
 
-    <button id="btnNota"
-            class="typewriter"
-            data-text="Mostrar más"
-            onclick="mostrarNota()">
-    </button>
+    <span id="notaCorta" class="typewriter"
+    data-text="Esta página está dedicada al mundo gaming..."></span>
+
+    <span id="notaCompleta" style="display:none;"
+    data-text="Esta página está para subir todo del mundo gaming que ya existe, ya que es obvio que no es de mi autoría, pero la función que cumple es reunir en una sola página emuladores y juegos sin virus. Aquí se podrán encontrar juegos y emuladores de PS1, PS2, PS3 y PSVita, facilitando el acceso y cuidando la seguridad de los usuarios que solo quieren jugar sin preocupaciones."></span>
+
+    <br><br>
+    <button onclick="mostrarNota(); clickBeep()">Mostrar más</button>
   </div>
 
 </div>
 
 <!-- SONIDOS -->
-<audio id="boot" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"></audio>
-<audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
-<audio id="error" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
+<audio id="boot" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+<audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+<audio id="error" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg" preload="auto"></audio>
 
 <script>
 const boot = document.getElementById('boot');
@@ -151,10 +155,10 @@ const error = document.getElementById('error');
 /* EFECTO ESCRITURA */
 function escribirTexto(el, texto, velocidad = 30){
   let i = 0;
-  el.innerHTML = '';
+  el.textContent = '';
   function escribir(){
     if(i < texto.length){
-      el.innerHTML += texto[i];
+      el.textContent += texto.charAt(i);
       i++;
       setTimeout(escribir, velocidad);
     }
@@ -164,11 +168,11 @@ function escribirTexto(el, texto, velocidad = 30){
 
 function iniciarTypewriter(){
   const elementos = document.querySelectorAll('.typewriter');
-  elementos.forEach((el, index) => {
+  elementos.forEach((el, index)=>{
     const texto = el.getAttribute('data-text');
     setTimeout(()=>{
       escribirTexto(el, texto);
-    }, index * 600);
+    }, index * 500);
   });
 }
 
@@ -176,52 +180,67 @@ function iniciarEmustation(){
   document.getElementById('startScreen').style.display='none';
   document.getElementById('loader').style.display='flex';
 
-  boot.volume=0.5;
+  boot.pause();
+  boot.currentTime = 0;
+  boot.volume = 0.8;
   boot.play();
 
-  let dots=0;
-  const loadingText=document.getElementById('loadingText');
-  const interval=setInterval(()=>{
-    dots=(dots+1)%12;
-    loadingText.textContent='Iniciando el sistema'+'.'.repeat(dots);
+  let dots = 0;
+  const loadingText = document.getElementById('loadingText');
+  const interval = setInterval(()=>{
+    dots = (dots + 1) % 12;
+    loadingText.textContent = 'Iniciando el sistema' + '.'.repeat(dots);
   },500);
 
   setTimeout(()=>{
     clearInterval(interval);
     document.getElementById('loader').style.display='none';
 
-    let usuario=localStorage.getItem('usuarioRetro');
+    let usuario = localStorage.getItem('usuarioRetro');
     if(!usuario){
-      usuario=prompt('Ingresa tu nombre de usuario')||'Usuario';
-      localStorage.setItem('usuarioRetro',usuario);
+      usuario = prompt('Ingresa tu nombre de usuario') || 'Usuario';
+      localStorage.setItem('usuarioRetro', usuario);
     }
 
-    const bienvenida=document.getElementById('bienvenida');
-    bienvenida.textContent=usuario+' se ha unido al servidor';
-    bienvenida.style.opacity='1';
+    const bienvenida = document.getElementById('bienvenida');
+    bienvenida.style.opacity = '1';
 
-    beep.volume=0.5;
-    beep.play();
+    const mensaje = usuario + ' se ha unido al sistema';
+    let i = 0;
+    bienvenida.textContent = '';
+    (function escribir(){
+      if(i < mensaje.length){
+        bienvenida.textContent += mensaje.charAt(i);
+        i++;
+        setTimeout(escribir, 50);
+      }
+    })();
 
+    clickBeep();
     iniciarTypewriter();
-  },9000);
+  }, 9000);
 }
 
 function mostrarNota(){
-  const corta=document.getElementById('notaCorta');
-  const completa=document.getElementById('notaCompleta');
-  const btn=document.getElementById('btnNota');
-
-  corta.style.display='none';
+  document.getElementById('notaCorta').style.display='none';
+  const completa = document.getElementById('notaCompleta');
   completa.style.display='inline';
-  btn.style.display='none';
-
-  escribirTexto(completa, completa.getAttribute('data-text'), 22);
-  clickBeep();
+  escribirTexto(completa, completa.getAttribute('data-text'), 18);
 }
 
-function clickBeep(){beep.currentTime=0;beep.play();}
-function errorBeep(){error.currentTime=0;error.play();}
+function clickBeep(){
+  beep.pause();
+  beep.currentTime = 0;
+  beep.volume = 0.6;
+  beep.play();
+}
+
+function errorBeep(){
+  error.pause();
+  error.currentTime = 0;
+  error.volume = 0.6;
+  error.play();
+}
 </script>
 
 </body>
