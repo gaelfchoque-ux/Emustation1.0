@@ -22,6 +22,7 @@ h1{font-size:2.5rem;text-shadow:0 0 10px #00ff66;}
   opacity:0;
   text-shadow:0 0 8px #00ff66;
 }
+
 .container{
   margin:60px auto;
   max-width:800px;
@@ -34,6 +35,7 @@ h1{font-size:2.5rem;text-shadow:0 0 10px #00ff66;}
   padding:40px;
   box-shadow:0 0 20px #00ff66;
 }
+
 a{color:#00ff66;text-decoration:none;}
 button{
   background:#000;
@@ -72,6 +74,19 @@ button:hover{background:#00ff66;color:#000}
   padding:40px 60px;
   box-shadow:0 0 25px #00ff66;
 }
+
+/* MANDOS */
+.mando{
+  position:fixed;
+  bottom:20px;
+  width:110px;
+  opacity:0.9;
+  image-rendering:pixelated;
+  pointer-events:none;
+  filter:drop-shadow(0 0 12px #00ff66);
+}
+.left{left:20px;}
+.right{right:20px;}
 </style>
 </head>
 
@@ -99,33 +114,31 @@ button:hover{background:#00ff66;color:#000}
 <div class="container">
 
   <div class="card" onclick="clickBeep()">
-    🎮 JUEGOS
+    <span class="terminal" data-text="🎮 JUEGOS"></span>
     <div>Próximamente...</div>
   </div>
 
   <div class="card">
-    🕹️ EMULADORES
+    <span class="terminal" data-text="🕹️ EMULADORES"></span>
     <div style="margin-top:15px;">
       <a href="https://www.mediafire.com/file/d7qbq4npmefeisi/android-latest.apk/file"
-         target="_blank"
-         onclick="clickBeep()">
+         target="_blank" onclick="clickBeep()">
         Descargar emulador PSVita
       </a>
     </div>
   </div>
 
   <div class="card" onclick="errorBeep()">
-    ⬇️ DESCARGAS
+    <span class="terminal" data-text="⬇️ DESCARGAS"></span>
     <div>Próximamente...</div>
   </div>
 
   <div class="card">
-    📝 NOTA
+    <span class="terminal" data-text="📝 NOTA"></span>
     <div style="margin-top:15px;">
       <span id="notaCorta">
         Esta página está dedicada al mundo gaming...
       </span>
-
       <span id="notaCompleta" style="display:none;">
         Esta página está para subir todo del mundo gaming que ya existe, ya que es obvio
         que no es de mi autoría, pero la función que cumple es reunir emuladores y juegos
@@ -134,7 +147,6 @@ button:hover{background:#00ff66;color:#000}
         quieren jugar sin preocupaciones.
       </span>
     </div>
-
     <div style="margin-top:20px;">
       <button onclick="toggleNota(); clickBeep()">Mostrar más</button>
     </div>
@@ -142,21 +154,37 @@ button:hover{background:#00ff66;color:#000}
 
 </div>
 
+<!-- MANDOS -->
+<img src="mando-left.gif" class="mando left">
+<img src="mando-right.gif" class="mando right">
+
 <!-- SONIDOS -->
-<audio id="boot" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
-<audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
-<audio id="error" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg" preload="auto"></audio>
+<audio id="boot" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"></audio>
+<audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+<audio id="error" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
 
 <script>
 const boot = document.getElementById('boot');
 const beep = document.getElementById('beep');
 const errorSound = document.getElementById('error');
 
+/* TEXTO TERMINAL */
+function escribirTexto(el, texto, velocidad=35){
+  el.textContent = "";
+  let i = 0;
+  const int = setInterval(()=>{
+    el.textContent += texto.charAt(i);
+    i++;
+    if(i >= texto.length) clearInterval(int);
+  }, velocidad);
+}
+
+/* START */
 function iniciarEmustation(){
   document.getElementById('startScreen').style.display='none';
   document.getElementById('loader').style.display='flex';
 
-  boot.volume = 0.8;
+  boot.volume = 0.9;
   boot.currentTime = 0;
   boot.play();
 
@@ -178,38 +206,36 @@ function iniciarEmustation(){
     }
 
     const bienvenida = document.getElementById('bienvenida');
-    bienvenida.textContent = usuario + ' se ha unido al servidor';
+    escribirTexto(bienvenida, usuario + ' se ha unido al servidor');
     bienvenida.style.opacity = '1';
 
-    beep.volume = 0.7;
+    beep.volume = 0.8;
     beep.currentTime = 0;
     beep.play();
-  }, 9000);
+
+    document.querySelectorAll('.terminal').forEach(el=>{
+      escribirTexto(el, el.dataset.text);
+    });
+
+  },9000);
 }
 
-function clickBeep(){
-  beep.currentTime = 0;
-  beep.play();
-}
-
-function errorBeep(){
-  errorSound.currentTime = 0;
-  errorSound.play();
-}
+function clickBeep(){beep.currentTime=0;beep.play();}
+function errorBeep(){errorSound.currentTime=0;errorSound.play();}
 
 function toggleNota(){
   const corta = document.getElementById('notaCorta');
   const completa = document.getElementById('notaCompleta');
   const btn = event.target;
 
-  if(completa.style.display === 'none'){
-    completa.style.display = 'inline';
-    corta.style.display = 'none';
-    btn.textContent = 'Mostrar menos';
+  if(completa.style.display==='none'){
+    completa.style.display='inline';
+    corta.style.display='none';
+    btn.textContent='Mostrar menos';
   }else{
-    completa.style.display = 'none';
-    corta.style.display = 'inline';
-    btn.textContent = 'Mostrar más';
+    completa.style.display='none';
+    corta.style.display='inline';
+    btn.textContent='Mostrar más';
   }
 }
 </script>
