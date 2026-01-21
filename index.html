@@ -34,6 +34,7 @@ h1{font-size:2.5rem;text-shadow:0 0 10px #00ff66;}
   border:3px solid #00ff66;
   padding:40px;
   box-shadow:0 0 20px #00ff66;
+  position:relative;
 }
 
 a{color:#00ff66;text-decoration:none;}
@@ -75,18 +76,20 @@ button:hover{background:#00ff66;color:#000}
   box-shadow:0 0 25px #00ff66;
 }
 
-/* MANDOS */
-.mando{
-  position:fixed;
-  bottom:20px;
-  width:110px;
+/* MANDOS SOLO JUEGOS */
+.card-juegos{overflow:hidden;}
+
+.mando-card{
+  position:absolute;
+  bottom:10px;
+  width:70px;
   opacity:0.9;
-  image-rendering:pixelated;
   pointer-events:none;
-  filter:drop-shadow(0 0 12px #00ff66);
+  image-rendering:pixelated;
+  filter:drop-shadow(0 0 8px #00ff66);
 }
-.left{left:20px;}
-.right{right:20px;}
+.mando-card.left{left:10px;}
+.mando-card.right{right:10px;}
 </style>
 </head>
 
@@ -113,11 +116,17 @@ button:hover{background:#00ff66;color:#000}
 
 <div class="container">
 
-  <div class="card" onclick="clickBeep()">
+  <!-- JUEGOS -->
+  <div class="card card-juegos" onclick="clickBeep()">
+
+    <img src="https://i.imgur.com/8QfQZQp.gif" class="mando-card left">
+    <img src="https://i.imgur.com/4M7IWwP.gif" class="mando-card right">
+
     <span class="terminal" data-text="🎮 JUEGOS"></span>
     <div>Próximamente...</div>
   </div>
 
+  <!-- EMULADORES -->
   <div class="card">
     <span class="terminal" data-text="🕹️ EMULADORES"></span>
     <div style="margin-top:15px;">
@@ -128,11 +137,13 @@ button:hover{background:#00ff66;color:#000}
     </div>
   </div>
 
+  <!-- DESCARGAS -->
   <div class="card" onclick="errorBeep()">
     <span class="terminal" data-text="⬇️ DESCARGAS"></span>
     <div>Próximamente...</div>
   </div>
 
+  <!-- NOTA -->
   <div class="card">
     <span class="terminal" data-text="📝 NOTA"></span>
     <div style="margin-top:15px;">
@@ -153,10 +164,6 @@ button:hover{background:#00ff66;color:#000}
   </div>
 
 </div>
-
-<!-- MANDOS -->
-<img src="mando-left.gif" class="mando left">
-<img src="mando-right.gif" class="mando right">
 
 <!-- SONIDOS -->
 <audio id="boot" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"></audio>
@@ -179,7 +186,7 @@ function escribirTexto(el, texto, velocidad=35){
   }, velocidad);
 }
 
-/* START */
+/* INICIO */
 function iniciarEmustation(){
   document.getElementById('startScreen').style.display='none';
   document.getElementById('loader').style.display='flex';
