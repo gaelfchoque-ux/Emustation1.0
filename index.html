@@ -2,226 +2,153 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>EMUSTATION OS</title>
+<title>EMUSTATION</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
   margin:0;
-  background:#000;
+  background:black;
   color:#00ff66;
   font-family:monospace;
   text-align:center;
+  overflow-x:hidden;
 }
 
-header{margin-top:40px;}
-
-h1{
-  font-size:2.5rem;
-  text-shadow:0 0 10px #00ff66;
+/* LOGO */
+header img{
+  margin-top:40px;
+  width:320px;
+  filter: drop-shadow(0 0 15px #00ff66);
 }
 
-.version{
-  font-size:0.7rem;
-  opacity:0.7;
-}
-
-#bienvenida{
-  margin-top:20px;
+/* TEXTO */
+.terminal{
+  margin-top:15px;
   font-size:0.9rem;
   opacity:0;
-  text-shadow:0 0 6px #00ff66;
 }
 
+/* CONTENEDOR */
 .container{
+  max-width:850px;
   margin:60px auto;
-  max-width:800px;
   display:grid;
-  grid-template-columns:1fr;
   gap:30px;
 }
 
+/* TARJETAS */
 .card{
   border:3px solid #00ff66;
-  padding:40px;
-  box-shadow:0 0 20px #00ff66;
+  padding:35px;
+  box-shadow:0 0 18px #00ff66;
   cursor:pointer;
 }
 
-a{
-  color:#00ff66;
-  text-decoration:none;
-}
-
+/* BOTONES */
 button{
-  background:#000;
+  background:black;
   color:#00ff66;
   border:2px solid #00ff66;
-  padding:14px 30px;
-  cursor:pointer;
+  padding:10px 22px;
   font-family:monospace;
-  box-shadow:0 0 15px #00ff66;
-  font-size:1rem;
+  cursor:pointer;
+  box-shadow:0 0 10px #00ff66;
 }
 
 button:hover{
   background:#00ff66;
-  color:#000;
+  color:black;
 }
 
-/* START */
-#startScreen{
+/* MANDOS */
+.mando{
   position:fixed;
-  inset:0;
-  background:#000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:10000;
+  width:110px;
+  opacity:0.75;
+  pointer-events:none;
+  filter: drop-shadow(0 0 12px #00ff66);
 }
 
-/* LOADER */
-#loader{
-  position:fixed;
-  inset:0;
-  background:#000;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-}
-
-.loader-box{
-  border:3px solid #00ff66;
-  padding:40px 60px;
-  box-shadow:0 0 25px #00ff66;
-}
+.izq{top:10px; left:10px;}
+.der{bottom:10px; right:10px;}
 </style>
 </head>
 
 <body>
 
-<!-- START -->
-<div id="startScreen">
-  <button id="startBtn">▶ INICIAR EMUSTATION</button>
-</div>
-
-<!-- LOADER -->
-<div id="loader">
-  <div class="loader-box">
-    <h2>EMUSTATION OS</h2>
-    <p id="loadingText">Iniciando el sistema</p>
-  </div>
-</div>
+<!-- MANDOS -->
+<img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" class="mando izq">
+<img src="https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif" class="mando der">
 
 <header>
-  <h1>EMUSTATION</h1>
-  <p id="bienvenida"></p>
-  <p class="version">EMUSTATION OS v1.0</p>
+  <img src="A_digital_graphic_design_logo_spells_out_EMUSTATI.png" alt="EMUSTATION">
+  <p id="bienvenida" class="terminal"></p>
 </header>
 
 <div class="container">
 
-  <div class="card">🎮 JUEGOS<div>Próximamente...</div></div>
-
-  <div class="card">
-    🕹️ EMULADORES
-    <div style="margin-top:10px;">
-      <a href="https://www.mediafire.com/file/d7qbq4npmefeisi/android-latest.apk/file" target="_blank">
-        Descargar emulador PSVita
-      </a>
-    </div>
+  <div class="card" onclick="beepPlay()">
+    <span id="juegos"></span>
   </div>
 
-  <div class="card">⬇️ DESCARGAS<div>Próximamente...</div></div>
+  <div class="card" onclick="beepPlay()">
+    <span id="emuladores"></span><br><br>
+    <a href="https://www.mediafire.com/file/d7qbq4npmefeisi/android-latest.apk/file"
+       target="_blank" onclick="beepPlay()">Descargar emulador PSVita</a>
+  </div>
+
+  <div class="card" onclick="errorPlay()">
+    <span id="descargas"></span>
+  </div>
 
   <div class="card">
-    📝 NOTA
-    <div id="notaCorta">Esta página está dedicada al mundo gaming...</div>
-    <div id="notaCompleta" style="display:none;">
-      Esta página reúne emuladores y juegos sin virus de PS1, PS2, PS3 y PSVita
-      para facilitar el acceso y cuidar la seguridad de los usuarios.
-    </div>
-    <div style="margin-top:15px;">
-      <button onclick="toggleNota()">Mostrar más</button>
-    </div>
+    <span id="nota"></span><br><br>
+    <button onclick="toggleNota()">Mostrar más</button>
   </div>
 
 </div>
 
 <!-- SONIDOS -->
-<audio id="boot" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"></audio>
 <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+<audio id="error" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
 
 <script>
-const boot = document.getElementById("boot");
-const beep = document.getElementById("beep");
-const startBtn = document.getElementById("startBtn");
+const beep=document.getElementById("beep");
+const error=document.getElementById("error");
+beep.volume=0.9;
+error.volume=0.9;
 
-startBtn.addEventListener("click", () => {
+function beepPlay(){beep.currentTime=0;beep.play();}
+function errorPlay(){error.currentTime=0;error.play();}
 
-  // sonido PERMITIDO porque es click real
-  boot.volume = 0.9;
-  boot.currentTime = 0;
-  boot.play();
-
-  document.getElementById("startScreen").style.display = "none";
-  document.getElementById("loader").style.display = "flex";
-
-  let dots = 0;
-  const loadingText = document.getElementById("loadingText");
-
-  const interval = setInterval(()=>{
-    dots = (dots + 1) % 10;
-    loadingText.textContent = "Iniciando el sistema" + ".".repeat(dots);
-  },500);
-
-  setTimeout(()=>{
-    clearInterval(interval);
-    document.getElementById("loader").style.display = "none";
-
-    let usuario = localStorage.getItem("usuarioRetro");
-    if(!usuario){
-      usuario = prompt("Ingresa tu nombre de usuario") || "Usuario";
-      localStorage.setItem("usuarioRetro", usuario);
-    }
-
-    const bienvenida = document.getElementById("bienvenida");
-    bienvenida.textContent = usuario + " se ha unido al sistema";
-    bienvenida.style.opacity = "1";
-
-    beep.volume = 0.8;
-    beep.currentTime = 0;
-    beep.play();
-  },9000);
-});
-
-function toggleNota(){
-  const corta = document.getElementById("notaCorta");
-  const completa = document.getElementById("notaCompleta");
-  const btn = event.target;
-
-  if(completa.style.display === "none"){
-    completa.style.display = "block";
-    corta.style.display = "none";
-    btn.textContent = "Mostrar menos";
-  }else{
-    completa.style.display = "none";
-    corta.style.display = "block";
-    btn.textContent = "Mostrar más";
-  }
-
-  beep.currentTime = 0;
-  beep.play();
+/* EFECTO ESCRITURA */
+function escribir(id,texto,vel=40){
+  const el=document.getElementById(id);
+  el.textContent="";
+  el.style.opacity=1;
+  let i=0;
+  const t=setInterval(()=>{
+    el.textContent+=texto.charAt(i);
+    i++;
+    if(i>=texto.length) clearInterval(t);
+  },vel);
 }
 
-document.addEventListener("click", e=>{
-  if(e.target.classList.contains("card") || e.target.tagName==="A"){
-    beep.currentTime = 0;
-    beep.play();
-  }
-});
-</script>
+/* USUARIO */
+let user=localStorage.getItem("usuarioRetro");
+if(!user){
+  user=prompt("Nombre de usuario")||"Usuario";
+  localStorage.setItem("usuarioRetro",user);
+}
 
-</body>
-</html>
+escribir("bienvenida",user+" se ha unido al sistema");
+
+/* OPCIONES */
+setTimeout(()=>escribir("juegos","🎮 JUEGOS — Próximamente"),1200);
+setTimeout(()=>escribir("emuladores","🕹️ EMULADORES"),2200);
+setTimeout(()=>escribir("descargas","⬇️ DESCARGAS — Próximamente"),3200);
+
+/* NOTA */
+let notaExpandida=false;
+const notaCorta="📝
