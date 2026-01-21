@@ -2,153 +2,217 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>EMUSTATION</title>
+<title>EMUSTATION OS</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
   margin:0;
-  background:black;
+  background:#000;
   color:#00ff66;
   font-family:monospace;
   text-align:center;
-  overflow-x:hidden;
 }
-
-/* LOGO */
-header img{
-  margin-top:40px;
-  width:320px;
-  filter: drop-shadow(0 0 15px #00ff66);
-}
-
-/* TEXTO */
-.terminal{
-  margin-top:15px;
-  font-size:0.9rem;
+header{margin-top:40px;}
+h1{font-size:2.5rem;text-shadow:0 0 10px #00ff66;}
+.version{font-size:0.7rem;opacity:0.7;}
+#bienvenida{
+  margin-top:20px;
+  font-size:1rem;
   opacity:0;
+  text-shadow:0 0 8px #00ff66;
 }
-
-/* CONTENEDOR */
 .container{
-  max-width:850px;
   margin:60px auto;
+  max-width:800px;
   display:grid;
+  grid-template-columns:1fr;
   gap:30px;
 }
-
-/* TARJETAS */
 .card{
   border:3px solid #00ff66;
-  padding:35px;
-  box-shadow:0 0 18px #00ff66;
-  cursor:pointer;
+  padding:40px;
+  box-shadow:0 0 20px #00ff66;
 }
-
-/* BOTONES */
+a{color:#00ff66;text-decoration:none;}
 button{
-  background:black;
+  background:#000;
   color:#00ff66;
   border:2px solid #00ff66;
-  padding:10px 22px;
-  font-family:monospace;
+  padding:12px 25px;
   cursor:pointer;
-  box-shadow:0 0 10px #00ff66;
+  font-family:monospace;
+  box-shadow:0 0 12px #00ff66;
 }
+button:hover{background:#00ff66;color:#000}
 
-button:hover{
-  background:#00ff66;
-  color:black;
-}
-
-/* MANDOS */
-.mando{
+/* START */
+#startScreen{
   position:fixed;
-  width:110px;
-  opacity:0.75;
-  pointer-events:none;
-  filter: drop-shadow(0 0 12px #00ff66);
+  inset:0;
+  background:#000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:10000;
 }
 
-.izq{top:10px; left:10px;}
-.der{bottom:10px; right:10px;}
+/* LOADER */
+#loader{
+  position:fixed;
+  inset:0;
+  background:#000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+.loader-box{
+  border:3px solid #00ff66;
+  padding:40px 60px;
+  box-shadow:0 0 25px #00ff66;
+}
 </style>
 </head>
 
 <body>
 
-<!-- MANDOS -->
-<img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" class="mando izq">
-<img src="https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif" class="mando der">
+<!-- START -->
+<div id="startScreen">
+  <button onclick="iniciarEmustation()">▶ INICIAR EMUSTATION</button>
+</div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-box">
+    <h2>EMUSTATION OS</h2>
+    <p id="loadingText">Iniciando el sistema</p>
+  </div>
+</div>
 
 <header>
-  <img src="A_digital_graphic_design_logo_spells_out_EMUSTATI.png" alt="EMUSTATION">
-  <p id="bienvenida" class="terminal"></p>
+  <h1>EMUSTATION</h1>
+  <p id="bienvenida"></p>
+  <p class="version">EMUSTATION OS v1.0</p>
 </header>
 
 <div class="container">
 
-  <div class="card" onclick="beepPlay()">
-    <span id="juegos"></span>
-  </div>
-
-  <div class="card" onclick="beepPlay()">
-    <span id="emuladores"></span><br><br>
-    <a href="https://www.mediafire.com/file/d7qbq4npmefeisi/android-latest.apk/file"
-       target="_blank" onclick="beepPlay()">Descargar emulador PSVita</a>
-  </div>
-
-  <div class="card" onclick="errorPlay()">
-    <span id="descargas"></span>
+  <div class="card" onclick="clickBeep()">
+    🎮 JUEGOS
+    <div>Próximamente...</div>
   </div>
 
   <div class="card">
-    <span id="nota"></span><br><br>
-    <button onclick="toggleNota()">Mostrar más</button>
+    🕹️ EMULADORES
+    <div style="margin-top:15px;">
+      <a href="https://www.mediafire.com/file/d7qbq4npmefeisi/android-latest.apk/file"
+         target="_blank"
+         onclick="clickBeep()">
+        Descargar emulador PSVita
+      </a>
+    </div>
+  </div>
+
+  <div class="card" onclick="errorBeep()">
+    ⬇️ DESCARGAS
+    <div>Próximamente...</div>
+  </div>
+
+  <div class="card">
+    📝 NOTA
+    <div style="margin-top:15px;">
+      <span id="notaCorta">
+        Esta página está dedicada al mundo gaming...
+      </span>
+
+      <span id="notaCompleta" style="display:none;">
+        Esta página está para subir todo del mundo gaming que ya existe, ya que es obvio
+        que no es de mi autoría, pero la función que cumple es reunir emuladores y juegos
+        sin virus en una sola página. Aquí se podrán encontrar juegos y emuladores de
+        PS1, etc., facilitando el acceso y cuidando la seguridad de los usuarios que solo
+        quieren jugar sin preocupaciones.
+      </span>
+    </div>
+
+    <div style="margin-top:20px;">
+      <button onclick="toggleNota(); clickBeep()">Mostrar más</button>
+    </div>
   </div>
 
 </div>
 
 <!-- SONIDOS -->
-<audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
-<audio id="error" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+<audio id="boot" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
+<audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+<audio id="error" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg" preload="auto"></audio>
 
 <script>
-const beep=document.getElementById("beep");
-const error=document.getElementById("error");
-beep.volume=0.9;
-error.volume=0.9;
+const boot = document.getElementById('boot');
+const beep = document.getElementById('beep');
+const errorSound = document.getElementById('error');
 
-function beepPlay(){beep.currentTime=0;beep.play();}
-function errorPlay(){error.currentTime=0;error.play();}
+function iniciarEmustation(){
+  document.getElementById('startScreen').style.display='none';
+  document.getElementById('loader').style.display='flex';
 
-/* EFECTO ESCRITURA */
-function escribir(id,texto,vel=40){
-  const el=document.getElementById(id);
-  el.textContent="";
-  el.style.opacity=1;
-  let i=0;
-  const t=setInterval(()=>{
-    el.textContent+=texto.charAt(i);
-    i++;
-    if(i>=texto.length) clearInterval(t);
-  },vel);
+  boot.volume = 0.8;
+  boot.currentTime = 0;
+  boot.play();
+
+  let dots = 0;
+  const loadingText = document.getElementById('loadingText');
+  const interval = setInterval(()=>{
+    dots = (dots + 1) % 12;
+    loadingText.textContent = 'Iniciando el sistema' + '.'.repeat(dots);
+  },500);
+
+  setTimeout(()=>{
+    clearInterval(interval);
+    document.getElementById('loader').style.display='none';
+
+    let usuario = localStorage.getItem('usuarioRetro');
+    if(!usuario){
+      usuario = prompt('Ingresa tu nombre de usuario') || 'Usuario';
+      localStorage.setItem('usuarioRetro', usuario);
+    }
+
+    const bienvenida = document.getElementById('bienvenida');
+    bienvenida.textContent = usuario + ' se ha unido al servidor';
+    bienvenida.style.opacity = '1';
+
+    beep.volume = 0.7;
+    beep.currentTime = 0;
+    beep.play();
+  }, 9000);
 }
 
-/* USUARIO */
-let user=localStorage.getItem("usuarioRetro");
-if(!user){
-  user=prompt("Nombre de usuario")||"Usuario";
-  localStorage.setItem("usuarioRetro",user);
+function clickBeep(){
+  beep.currentTime = 0;
+  beep.play();
 }
 
-escribir("bienvenida",user+" se ha unido al sistema");
+function errorBeep(){
+  errorSound.currentTime = 0;
+  errorSound.play();
+}
 
-/* OPCIONES */
-setTimeout(()=>escribir("juegos","🎮 JUEGOS — Próximamente"),1200);
-setTimeout(()=>escribir("emuladores","🕹️ EMULADORES"),2200);
-setTimeout(()=>escribir("descargas","⬇️ DESCARGAS — Próximamente"),3200);
+function toggleNota(){
+  const corta = document.getElementById('notaCorta');
+  const completa = document.getElementById('notaCompleta');
+  const btn = event.target;
 
-/* NOTA */
-let notaExpandida=false;
-const notaCorta="📝
+  if(completa.style.display === 'none'){
+    completa.style.display = 'inline';
+    corta.style.display = 'none';
+    btn.textContent = 'Mostrar menos';
+  }else{
+    completa.style.display = 'none';
+    corta.style.display = 'inline';
+    btn.textContent = 'Mostrar más';
+  }
+}
+</script>
+
+</body>
+</html>
